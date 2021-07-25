@@ -32,8 +32,8 @@ def moveRobot(speed,limitDistance,forward_backward):
     distanceMoved = 0.0 # before any movement distance value
     loopRate = rospy.Rate(10) # The messages are published 10 times a second.
     topicAdress = '/turtle1/cmd_vel'
-    velocityPublisher = rospy.Publisher(topicAdress,Twist,queue_size = 10) # Publisher is created with topic which the publisher will use ,message type that is Twist
-    # in this condition and queue size for the storing up to chosen (10) range into the buffer.
+    velocityPublisher = rospy.Publisher(topicAdress,Twist,queue_size = 10) # Publisher is created with topic which the publisher will use ,message type that is
+    # Twist in this condition and queue size for the storing up to chosen (10) range into the buffer.
     while True: # Entering the loop that makes the actual moving 
         rospy.loginfo("Robot moves.") # The information is given to the terminal
         velocityPublisher.publish(velocityMessage) # Velocity messages are published
