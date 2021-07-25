@@ -6,7 +6,8 @@ import math # to calculate distance moved by the robot
 import time # to make PID control 
 
 # 4th step: functions that is needed for the movements have been written and coordinates for the Pose messages have been assigned.
-x, y = 0
+x = 0
+y = 0
 yaw = 0 
 
 def poseCallback (poseMessage): # This function is called every change in position happens.
@@ -47,6 +48,7 @@ def moveRobot(speed,limitDistance,forward_backward):
     velocityPublisher.publish(velocityMessage)
 
 def rotateRobot(desiredAngularSpeedInDegree,desiredAngleInDegree,clckwise_cclckwsie):
+    global yaw
     # Twist object is created and the values of these messages are set up to zero due to make initial values always in the same orientation.
     velocityMessage = Twist()
     velocityMessage.linear.x = 0.0
@@ -81,7 +83,7 @@ def rotateRobot(desiredAngularSpeedInDegree,desiredAngleInDegree,clckwise_cclckw
     velocityMessage.angular.z = 0.0
     velocityPublisher.publish(velocityMessage)
 
-# def goToGoal(goalX,goalY):
+def goToGoal(goalX,goalY):
     global x,y,yaw
     velocityMessage = Twist()   
     # PID controller was used in this method to achive less error when goal keeps closer.
@@ -94,13 +96,58 @@ def rotateRobot(desiredAngularSpeedInDegree,desiredAngleInDegree,clckwise_cclckw
         angularSpeed = (angleOrientationToGoal - yaw)*kAngular # When the angle exist with respcet to goal, angle decreases as the robot has a linear orientation o goal
         velocityMessage.linear.x = linearSpeed
         velocityMessage.angular.z = angularSpeed
-        
-        
-# def setDesiredOrientation(desiredAngleInDegree):
+        velocityPublisher.publish(velocityMessage)
+        if distance < 0.01:
+            break
+                      
+def setDesiredOrientation(desiredAngleInDegree):
+    desiredAngleInRadians = math.radians(desiredAngleInDegree)
+    exactAngleInRadians = desiredAngleInRadians - yaw
+    if exactAngleInRadians < 0:
+        clckwise_cclckwsie = 1
+    else:
+        clckwise_cclckwsie = 0
+    print(exactAngleInRadians)
+    print(desiredAngleInRadians)
+    rotateRobot(20,math.degrees(exactAngleInRadians),clckwise_cclckwsie)
 
-# def gridMovement():
+def gridMovement(): # in this movement almost every motion is tried to make similar real-world app.
+    desiredPosition = Pose() # position info is taken to know coordinates that robot is standing and make the proper go to goal action
+    #In position message , x,y and orientation which is theta are the desired infos for that method
+    desiredPosition.x = 1
+    desiredPosition.y = 1
+    desiredPosition.theta = 0
+    # All the values were set up by me, in these methods' values written in below are changable to test how outcomes affect
+    goToGoal(8,8)
+    setDesiredOrientation(math.degrees(desiredPosition.theta))
+    moveRobot(2.0,3.0,True)
+    rotateRobot(30,180,False)
+    pass
 
-# def spiralMovement():
+def spiralMovement(): # In this method PID control was used.
+    velocityMessage = Twist()
+    currentPose = Pose()
+    loopRate = rospy.Rate(10)
+    topicAdress = '/turtle1/cmd_vel'
+    velocityPublisher  rospy.Publisher(topicAdress,Twist,queue_size = 10)
+    kAngularSpeed = 4
+    kRadius = 0
+    while((currentPose.x < 10.5) and (currentPose.y < 10.5)):
+        # Current positions are limited for the turtlesim UI , It has almost x = 11 and y = 11 ranges in the coordinate system
+        kRadius = kRadius + 1
+        velocityMessage.linear.x = kRadius
+        velocityMessage.linear.y = 0
+        velocityMessage.linear.z = 0
+        velocityMessage.angular.x = 0
+        velocityMessage.angular.y = 0
+        velocityMessage.angular.z = kAngularSpeed
+        velocityPublisher.publish(velocityMessage)
+        loopRate.sleep()
+    velocityMessage.linear.x = 0
+    velocityMessage.angular.x = 0
+    velocityPublisher.publish(velocityMessage)
+
+
 
 if __name__  == "__main__":
     try:
@@ -110,8 +157,8 @@ if __name__  == "__main__":
         # 2nd step: Subscriber and publisher are created
         velocityTopicAdress = '/turtle1/cmd_vel'
         velocityPublisher = rospy.Publisher(velocityTopicAdress,Twist,queue_size = 10)
-        poseTopicAdress = '/turtle1/pose'
-        poseSubscriber = rospy.Subscriber(poseTopicAdress,poseCallback)
+        poseTopicAdress = '/turtle1/Pose'
+        poseSubscriber = rospy.Subscriber(poseTopicAdress,Pose,poseCallback)
         time.sleep(2)
         # 3rd step: Methods which make movement are constructed
         # moveRobot(2.0,2.0,True)
@@ -122,8 +169,3 @@ if __name__  == "__main__":
         # spiralMovement()
     except rospy.ROSInterruptException:
         rospy.loginfo("Node has been terminated!")
-
-
-
-
-
