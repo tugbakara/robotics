@@ -46,7 +46,7 @@ def moveRobot(speed,limitDistance,forward_backward):
     velocityMessage.linear.x = 0.0
     velocityPublisher.publish(velocityMessage)
 
-def rotateRobot(desiredAngularSpeedInDegree,limitAngleInDegree,clckwise_cclckwsie):
+def rotateRobot(desiredAngularSpeedInDegree,desiredAngleInDegree,clckwise_cclckwsie):
     # Twist object is created and the values of these messages are set up to zero due to make initial values always in the same orientation.
     velocityMessage = Twist()
     velocityMessage.linear.x = 0.0
@@ -65,7 +65,7 @@ def rotateRobot(desiredAngularSpeedInDegree,limitAngleInDegree,clckwise_cclckwsi
     
     t0 = rospy.Time.now().to_sec() # to make time substraction first time is taken before the loop
     currentAngleInDegree = 0.0
-    loopRate = rospy.Rate(10)
+    loopRate = rospy.Rate(15)
     topicAdress = '/turtle1/cmd_vel'
     velocityPublisher = rospy.Publisher(topicAdress,Twist,queue_size = 10)
     while True:
@@ -75,11 +75,32 @@ def rotateRobot(desiredAngularSpeedInDegree,limitAngleInDegree,clckwise_cclckwsi
         currentAngleInDegree = (t1 - t0)*desiredAngularSpeedInDegree
         print(currentAngleInDegree)
         loopRate.sleep()
-        if (currentAngleInDegree > limitAngleInDegree):
+        if (currentAngleInDegree > desiredAngleInDegree):
             rospy.loginfo("Robot has reached desired angle.")
             break
     velocityMessage.angular.z = 0.0
     velocityPublisher.publish(velocityMessage)
+
+# def goToGoal(goalX,goalY):
+    global x,y,yaw
+    velocityMessage = Twist()   
+    # PID controller was used in this method to achive less error when goal keeps closer.
+    while True:
+        kLinear = 0.5 # this coefficient can be changed according to system response
+        distance = abs(math.sqrt(pow((goalX-x),2)+pow((goalY-y),2))) # In tis formula x and y are coming from Pose messages which are about coordinates of turtlesim
+        linearSpeed = kLinear*distance # Proportional gain is used when the distance to the gal location decreaes ,speed also decreases.
+        kAngular = 4.0
+        angleOrientationToGoal = math.atan2(goalY-y,goalX-x) # Most proper angle is made for the goal 
+        angularSpeed = (angleOrientationToGoal - yaw)*kAngular # When the angle exist with respcet to goal, angle decreases as the robot has a linear orientation o goal
+        velocityMessage.linear.x = linearSpeed
+        velocityMessage.angular.z = angularSpeed
+        
+        
+# def setDesiredOrientation(desiredAngleInDegree):
+
+# def gridMovement():
+
+# def spiralMovement():
 
 if __name__  == "__main__":
     try:
@@ -88,13 +109,17 @@ if __name__  == "__main__":
         rospy.init_node(nodeName,anonymous = True) # A node should have a unique name due to that reason anonymous = True
         # 2nd step: Subscriber and publisher are created
         velocityTopicAdress = '/turtle1/cmd_vel'
-        velocityPublisher = rospy.Publisher(topicAdress,Twist,queue_size = 10)
+        velocityPublisher = rospy.Publisher(velocityTopicAdress,Twist,queue_size = 10)
         poseTopicAdress = '/turtle1/pose'
         poseSubscriber = rospy.Subscriber(poseTopicAdress,poseCallback)
         time.sleep(2)
         # 3rd step: Methods which make movement are constructed
-        moveRobot(2.0,2.0,True)
-        rotateRobot(2.0,45,True)
+        # moveRobot(2.0,2.0,True)
+        rotateRobot(25,45,True)
+        # goToGoal(9,9)
+        # setDesiredOrientation(180)
+        # gridMovement()
+        # spiralMovement()
     except rospy.ROSInterruptException:
         rospy.loginfo("Node has been terminated!")
 
