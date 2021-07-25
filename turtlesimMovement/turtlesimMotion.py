@@ -32,7 +32,8 @@ def moveRobot(speed,limitDistance,forward_backward):
     distanceMoved = 0.0 # before any movement distance value
     loopRate = rospy.Rate(10) # The messages are published 10 times a second.
     topicAdress = '/turtle1/cmd_vel'
-    velocityPublisher = rospy.Publisher(topicAdress,Twist,queue_size = 10) # Publisher is created with topic which the publisher will use ,message type that is Twist in this condition and queue size for the storing up to chosen (10) range into the buffer.
+    velocityPublisher = rospy.Publisher(topicAdress,Twist,queue_size = 10) # Publisher is created with topic which the publisher will use ,message type that is Twist
+    # in this condition and queue size for the storing up to chosen (10) range into the buffer.
     while True: # Entering the loop that makes the actual moving 
         rospy.loginfo("Robot moves.") # The information is given to the terminal
         velocityPublisher.publish(velocityMessage) # Velocity messages are published
@@ -58,7 +59,8 @@ def rotateRobot(desiredAngularSpeedInDegree,desiredAngleInDegree,clckwise_cclckw
     velocityMessage.angular.y = 0.0
     velocityMessage.angular.z = 0.0
 
-    angularSpeed = math.radians(desiredAngularSpeedInDegree) # this conversion is made due to difficulties of transforming degree to radian as a humanbeing. This is an obligation because ROS uses radians.
+    angularSpeed = math.radians(desiredAngularSpeedInDegree) # this conversion is made due to difficulties of transforming degree to radian as a humanbeing.
+    # This is an obligation because ROS uses radians.
     # 10th step: Angular speed is decided according to clockwise or counter-clockwise
     if clckwise_cclckwsie:
         velocityMessage.angular.z = -abs(angularSpeed)
@@ -89,11 +91,13 @@ def goToGoal(goalX,goalY):
     # PID controller was used in this method to achive less error when goal keeps closer.
     while True:
         kLinear = 0.5 # this coefficient can be changed according to system response
-        distance = abs(math.sqrt(pow((goalX-x),2)+pow((goalY-y),2))) # In tis formula x and y are coming from Pose messages which are about coordinates of turtlesim
+        distance = abs(math.sqrt(pow((goalX-x),2)+pow((goalY-y),2))) # In tis formula x and y are coming from Pose messages which are about coordinates 
+        # of turtlesim
         linearSpeed = kLinear*distance # Proportional gain is used when the distance to the gal location decreaes ,speed also decreases.
         kAngular = 4.0
         angleOrientationToGoal = math.atan2(goalY-y,goalX-x) # Most proper angle is made for the goal 
-        angularSpeed = (angleOrientationToGoal - yaw)*kAngular # When the angle exist with respcet to goal, angle decreases as the robot has a linear orientation o goal
+        angularSpeed = (angleOrientationToGoal - yaw)*kAngular # When the angle exist with respcet to goal, angle decreases as the robot has a 
+        # linear orientation o goal
         velocityMessage.linear.x = linearSpeed
         velocityMessage.angular.z = angularSpeed
         velocityPublisher.publish(velocityMessage)
@@ -146,8 +150,6 @@ def spiralMovement(): # In this method PID control was used.
     velocityMessage.linear.x = 0
     velocityMessage.angular.x = 0
     velocityPublisher.publish(velocityMessage)
-
-
 
 if __name__  == "__main__":
     try:
