@@ -147,6 +147,8 @@ def spiralMovement(): # In this method PID control was used.
     velocityMessage.angular.x = 0
     velocityPublisher.publish(velocityMessage)
 
+
+
 if __name__  == "__main__":
     try:
         # 1st step: Create a node
