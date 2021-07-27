@@ -15,7 +15,7 @@ const double yMax = 11.0;
 
 const double PI = 3.14159265359;
 
-void moveRobot(double speed, double distance, double forward_backward);
+void moveRobot(double speed, double distance, bool forward_backward);
 void rotateRobot(double angularSpeedInRadians, double angleInDegreesInRadians, bool clckwise_cclckwise);
 double degreesToRadians(double angleInDegrees);
 void setDesiredOrientation(double angleInRadians);
@@ -74,5 +74,71 @@ int main(int argc, char **argv)
     ros::spin();
     
     return 0;
-
+    
     }
+
+void moveRobot(double speed, double distance,bool forward_backward)
+{
+    geometry_msgs::Twist velocityMessage;
+    if(forward_backward)
+        velocityMessage.linear.x = abs(speed);
+    else
+        velocityMessage.linear.x = -abs(speed);
+
+    velocityMessage.linear.y = 0;
+    velocityMessage.linear.z = 0;
+    velocityMessage.angular.x = 0;
+    velocityMessage.angular.y = 0;
+    velocityMesaage.angular.z = 0;
+    double t0 = ros::Time::now().toSec();
+    double distanceMoved = 0.0;
+    ros::Rate loopRate(100);
+
+    do{
+        velocityPublisher.publish(velocityMessage);
+        double t1 = ros::Time::now().toSec();
+        distanceMoved = speed*(t1 - t10)
+        ros::spinOnce();
+        loopRate.sleep();
+        cout<<(t1 - t0)<<","<<distanceMoved<<endl;      
+    }while(distanceMoved < distance);
+    velocityMessage.linear.x = 0;
+    velocityPulisher.publish(velocityMessage);
+}
+
+void rotateRobot(double angularSpeedInRadians, double angleInDegreesInRadians, bool clckwise_cclckwise)
+{
+    geometry_msgs::Twist velocityMessage;
+    velocityMessage.linear.x = 0;
+    velocityMessage.linear.y = 0;
+    velocityMessage.linear.z = 0;
+    velocityMessage.angular.x = 0;
+    velocityMessage.angular.y = 0;
+    if(clckwise_cclckwise)
+        velocityMessage.angular.z = -abs(angularSpeedInRadians);
+    else
+        velocityMessage.angular.z = abs(angularSpeedInRadians);
+
+    double currentAngle = 0.0;
+    double t0 = ros::Time::now().toSec();
+    ros::Rate loopRate(10);
+    do{
+        velocityublisher.publish(velocityMessage);
+        double t1 = ros::Time::now().toSec();
+        currentAngle = angularSpeedInRadians*(t1 - t0);
+        ros::spinOnce();
+        loopRate.sleep();
+    }while(currentAngle < angleInDegreesInRadians);
+    velocityMessage.angular.z = 0;
+    velocityPublisher.publish(velocityMessage);
+}
+
+double degreesToRadians(double angleInDegrees)
+{
+    return angleInDegrees*PI/180.0;
+}
+
+void setDesiredOrientation(double desiredAngleInRadians)
+{
+    double limitAngleInRadians = desiredAngleInRadians - robotPosition.theta;
+}
