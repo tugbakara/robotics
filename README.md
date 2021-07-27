@@ -3,4 +3,6 @@ In this repository some files will be added and scripts in these folders have be
 
 ## Content
 1. turtlesim movement
+  a. turtlesimMovment.py
+  b. turtlesimMovement.cpp
 
