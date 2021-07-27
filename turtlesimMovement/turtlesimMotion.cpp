@@ -63,8 +63,7 @@ int main(int argc, char **argv)
     poseMesaage.x = 1;
     poseMessage.y = 1;
     poseMessag.theta = 0;
-    goToGoal(goalPosition,0.01);
-    
+    goToGoal(goalPosition,0.01);    
 
     gridMovement();
 
@@ -153,6 +152,21 @@ double getDistance(double x1, double y1, double x2,double y2)
 }
 
 void goToGoal(turtlesim::Pose goalPosition, double limitDistance)
+{
+
+}
+
+void gridMovement()
+{
+
+}
+
+void spiralMovement()
+{
+
+}
+
+void poseCallback(const turtlesim::Pose::ConstPtr &poseMessage)
 {
 
 }
