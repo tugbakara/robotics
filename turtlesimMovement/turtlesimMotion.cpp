@@ -4,9 +4,10 @@
 #include "sstream"
 
 using namespace std;
-ros::Publisher velocityPublisher;
-ros::Subscriber poseSubscriber;
-turtlesim::Pose robotPosition;
+
+global ros::Publisher velocityPublisher;
+global ros::Subscriber poseSubscriber;
+global turtlesim::Pose robotPosition;
 
 const double xMin = 0.0;
 const double yMin = 0.0;
@@ -141,4 +142,20 @@ double degreesToRadians(double angleInDegrees)
 void setDesiredOrientation(double desiredAngleInRadians)
 {
     double limitAngleInRadians = desiredAngleInRadians - robotPosition.theta;
+    bool clckwise_cclckwise = ((limitAngleInRadians < 0)? true:false);
+    cout<<desiredAngleInRadians<<","<<robotPosition.theta<<","<<limitAngleInRadians<<","<<clckwise_cclckwise<<endl;
+    rotateRobot(degreesToRadians(10),abs(limitAngleInRadians),clckwise_cclckwise);
 }
+
+double getDistance(double x1, double y1, double x2,double y2)
+{
+    return sqrt(pow(x1 - x2),2) +pow((y1 -y2),2));
+}
+
+void goToGoal(turtlesim::Pose goalPosition, double limitDistance)
+{
+
+}
+
+
+
