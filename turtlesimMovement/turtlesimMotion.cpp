@@ -153,22 +153,78 @@ double getDistance(double x1, double y1, double x2,double y2)
 
 void goToGoal(turtlesim::Pose goalPosition, double limitDistance)
 {
-
+    geometry_msgs::Twist velocityMessage;
+    ros::Rate loopRate(20);
+    double distanceMoved = 0.0;
+    do
+    {
+        double kLinear = 1.0;
+        double kAngular = 4.0;
+        double distance = getDistance(robotPosition.x,robotPosition.y,goalPosition.x,goalPosition.y);
+        double distanceMoved = distanceMoved + distance;
+        velocityMessage.linear.x = (kLinear*distance);
+        velocityMessage.linear.y = 0;
+        velocityMessage.linear.z = 0;
+        velocityMessage.angular.x = 0;
+        velocityMessage.angular.y = 0;
+        desiredAngleToGoal = atan2(goalPosition.y - robotPosition.y,goalPosition.x - robotPosition.x)
+        velocityMessage.angular.z = kAngular*(desiredAngleToGoal - robotPosition.theta);
+        velocityPublisher.publish(velocityMessage);
+        ros::spinOnce();
+        loopRate.sleep();
+    } while (getDistance(robotPosition.x,robotPosition.y,goalPosition.x,goalPosition.y) > limitDistance);
+    cout<<"Robot has reached to the goal."<<endl;
+    velocityMessage.linear.x = 0;
+    velocityMessage.angular.z = 0;
+    velocityPublisher.publish(velocityMessage); 
 }
 
 void gridMovement()
 {
-
+    ros::Rate loopRate(0.5);
+    turtlesim::Pose goalPosition;
+    goalPosition.x = 1;
+    goalPosition.y = 1;
+    goalPosition.theta = 0;
+    goToGoal(goalPosition,0.01);
+    loopRate.sleep();
+    moveRobot(3.0,8.0,true);
+    loopRate.sleep();
+    rotateRobot(degreesToRadians(10),degreesToRadians(90),false);
+    loopRate.sleep();
 }
 
 void spiralMovement()
 {
+    geometry_msgs::Twist velocityMessage;
+    double spinCount = 0;
+    double constantAngularSpeed = 4;
+    double constantLinearSpeed = 0.5;
+    ros::Rate loopRate(10);
 
+    do
+    { 
+        constantLinearSpeed + = 1.0;
+        velocityMessage.linear.x = constantLinearSpeed;
+        velocityMessage.linear.y = 0;
+        velocityMessage.linear.z = 0;
+        velocityMessage.angular.x = 0;
+        velocityMessage.angular.y = 0;
+        velocityMessage.angular.z = constantAngularSpeed;
+        cout<<"Linear velocity in x direction: "<<velocityMessage.linear.x<<endl;
+        cout<<"Angular speed in z direction: "<<velocityMessage.angular.z<<endl;
+        velocityPublisher.publish(velocityMessage);
+        ros::spinOnce();
+        loopRate.sleep();
+    } while ((robotPosition.x < 10.0) && (rootPosition.y < 10.0));
+    velocityMessage.linear.x = 0;
+    velocityMessage.angular.z = 0;
+    velocityPublisher.publish(velocityMessage);    
 }
 
 void poseCallback(const turtlesim::Pose::ConstPtr &poseMessage)
 {
-
+    robotPosition
 }
 
 
