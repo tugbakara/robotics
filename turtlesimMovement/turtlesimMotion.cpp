@@ -228,6 +228,3 @@ void poseCallback(const turtlesim::Pose::ConstPtr &poseMessage)
     robotPosition.y = poseMessage -> y;
     robotPosition.theta = poseMessage -> theta;
 }
-
-
-
