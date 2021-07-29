@@ -1,13 +1,13 @@
 #include "ros/ros.h"
 #include "geometry_msgs/Twist.h"
 #include "turtlesim/Pose.h"
-#include "sstream"
+#include <sstream>
 
 using namespace std;
 
-global ros::Publisher velocityPublisher;
-global ros::Subscriber poseSubscriber;
-global turtlesim::Pose robotPosition;
+ros::Publisher velocityPublisher;
+ros::Subscriber poseSubscriber;
+turtlesim::Pose robotPosition;
 
 const double xMin = 0.0;
 const double yMin = 0.0;
@@ -31,7 +31,7 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "turtlesimMovement");
     ros::NodeHandle rosNodeHandle; // Noedhandle object is created to handle ros nodes
     double speed,angularSpeed;
-    double distance,angleInDegreesInDegrees;
+    double distance,angleInDegrees;
     bool forward_backward,clckwise_cclckwise;
     
     // Publisher and subscriber are created thanks to nodehandle
@@ -60,9 +60,9 @@ int main(int argc, char **argv)
 
     // Pose object is created to adjust position of the robot fot the method goToGoal 
     turtlesim::Pose goalPosition;
-    poseMesaage.x = 1;
-    poseMessage.y = 1;
-    poseMessag.theta = 0;
+    goalPosition.x = 1;
+    goalPosition.y = 1;
+    goalPosition.theta = 0;
     goToGoal(goalPosition,0.01);    
 
     gridMovement();
@@ -89,7 +89,7 @@ void moveRobot(double speed, double distance,bool forward_backward)
     velocityMessage.linear.z = 0;
     velocityMessage.angular.x = 0;
     velocityMessage.angular.y = 0;
-    velocityMesaage.angular.z = 0;
+    velocityMessage.angular.z = 0;
     double t0 = ros::Time::now().toSec();
     double distanceMoved = 0.0;
     ros::Rate loopRate(100);
@@ -97,13 +97,13 @@ void moveRobot(double speed, double distance,bool forward_backward)
     do{
         velocityPublisher.publish(velocityMessage);
         double t1 = ros::Time::now().toSec();
-        distanceMoved = speed*(t1 - t10)
+        distanceMoved = speed*(t1 - t0);
         ros::spinOnce();
         loopRate.sleep();
         cout<<(t1 - t0)<<","<<distanceMoved<<endl;      
     }while(distanceMoved < distance);
     velocityMessage.linear.x = 0;
-    velocityPulisher.publish(velocityMessage);
+    velocityPublisher.publish(velocityMessage);
 }
 
 void rotateRobot(double angularSpeedInRadians, double angleInDegreesInRadians, bool clckwise_cclckwise)
@@ -123,7 +123,7 @@ void rotateRobot(double angularSpeedInRadians, double angleInDegreesInRadians, b
     double t0 = ros::Time::now().toSec();
     ros::Rate loopRate(10);
     do{
-        velocityublisher.publish(velocityMessage);
+        velocityPublisher.publish(velocityMessage);
         double t1 = ros::Time::now().toSec();
         currentAngle = angularSpeedInRadians*(t1 - t0);
         ros::spinOnce();
@@ -147,8 +147,8 @@ void setDesiredOrientation(double desiredAngleInRadians)
 }
 
 double getDistance(double x1, double y1, double x2,double y2)
-{
-    return sqrt(pow(x1 - x2),2) +pow((y1 -y2),2));
+{ 
+    return sqrt(pow((x1 - x2),2) +pow((y1 -y2),2));
 }
 
 void goToGoal(turtlesim::Pose goalPosition, double limitDistance)
@@ -167,7 +167,7 @@ void goToGoal(turtlesim::Pose goalPosition, double limitDistance)
         velocityMessage.linear.z = 0;
         velocityMessage.angular.x = 0;
         velocityMessage.angular.y = 0;
-        desiredAngleToGoal = atan2(goalPosition.y - robotPosition.y,goalPosition.x - robotPosition.x)
+        double desiredAngleToGoal = atan2(goalPosition.y - robotPosition.y,goalPosition.x - robotPosition.x);
         velocityMessage.angular.z = kAngular*(desiredAngleToGoal - robotPosition.theta);
         velocityPublisher.publish(velocityMessage);
         ros::spinOnce();
@@ -204,7 +204,7 @@ void spiralMovement()
 
     do
     { 
-        constantLinearSpeed + = 1.0;
+        constantLinearSpeed = constantLinearSpeed + 1.0;
         velocityMessage.linear.x = constantLinearSpeed;
         velocityMessage.linear.y = 0;
         velocityMessage.linear.z = 0;
@@ -216,7 +216,7 @@ void spiralMovement()
         velocityPublisher.publish(velocityMessage);
         ros::spinOnce();
         loopRate.sleep();
-    } while ((robotPosition.x < 10.0) && (rootPosition.y < 10.0));
+    } while ((robotPosition.x < 10.0) && (robotPosition.y < 10.0));
     velocityMessage.linear.x = 0;
     velocityMessage.angular.z = 0;
     velocityPublisher.publish(velocityMessage);    
