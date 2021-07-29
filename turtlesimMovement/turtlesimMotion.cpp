@@ -224,7 +224,9 @@ void spiralMovement()
 
 void poseCallback(const turtlesim::Pose::ConstPtr &poseMessage)
 {
-    robotPosition
+    robotPosition.x = poseMessage -> x;
+    robotPosition.y = poseMessage -> y;
+    robotPosition.theta = poseMessage -> theta;-
 }
 
 
