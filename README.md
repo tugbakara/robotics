@@ -7,7 +7,7 @@ In this repository some files will be added and scripts in these folders have be
     - turtlesimMovement.cpp
     
 2. computerVisionwithROS
-    - obstacleDetection.py
+    - ballDetection.py
 
 
 
