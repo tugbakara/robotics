@@ -24,7 +24,7 @@ class FaceRecognation():
             rospy.signal_shutdown("ROS is shutting down...")
     def determination(self,cvImage):
         grayImage = cv2.cvtColor(cvImage,cv2.COLOR_BGR2GRAY)
-        trainedFaceCascade = cv2.CascadeClassifier("/home/tugbakara/Desktop/Dersler/git/pythonExercises/openCV/trainedClassfiers/haarcascade_frontalface_default.xml")
+        trainedFaceCascade = cv2.CascadeClassifier("usr/openCV/trainedClassfiers/haarcascade_frontalface_default.xml")
         recognizedFaces = trainedFaceCascade.detectMultiScale(grayImage,
                                                                 scaleFactor = 1.1, # proportion for lessening image size
                                                                 minNeighbors = 5, # number of neighbor rectangle 
