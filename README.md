@@ -13,5 +13,8 @@ To run python program, firstly in the terminal " chmod +x file_name.py " is adde
 2. computerVisionwithROS
     - humanDetection.py
 
+3. laserScanner
+    - scanSubscriber.py
+
 
 
