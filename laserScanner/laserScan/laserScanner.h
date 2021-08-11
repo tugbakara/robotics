@@ -12,7 +12,7 @@ class LaserScanner
     static int indexOfMinRange(sensor_msgs::LaserScan & laserScanMessage);
     
     static double relativeAngleOfMaxRange(sensor_msgs::LaserScan & laserScanMessage);
-    static double relativeAngleOfMinRage(sensor_msgs::LaserScan & laserScanMessage);
+    static double relativeAngleOfMinRange(sensor_msgs::LaserScan & laserScanMessage);
 
     static void printingLaserScanRanges(sensor_msgs::LaserScan laserScanMessage);
 
