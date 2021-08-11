@@ -122,7 +122,7 @@ double LaserScanner::relativeAngleOfMaxRange(sensor_msgs::LaserScan & laserScanM
 {
     return -(laserScanMessage.angle_min + (laserScanMessage.angle_increment*indexOfMaxRange(laserScanMessage)));
 }
-double LaserScanner::relativeAngleOfMinRage(sensor_msgs::LaserScan & laserScanMessage)
+double LaserScanner::relativeAngleOfMinRange(sensor_msgs::LaserScan & laserScanMessage)
 {
     return -(laserScanMessage.angle_min + (laserScanMessage.angle_increment*indexOfMinRange(laserScanMessage)));
 }
