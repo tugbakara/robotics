@@ -15,6 +15,7 @@ To run python program, firstly in the terminal " chmod +x file_name.py " is adde
 
 3. laserScanner
     - scanSubscriber.py
+    - scanSubscriber.cpp
 
 
 
