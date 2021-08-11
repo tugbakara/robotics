@@ -144,7 +144,9 @@ void LaserScanner::printingLaserScanRanges(sensor_msgs::LaserScan laserScanMessa
     cout<<"Scan time: "<<laserScanMessage.scan_time<<"seconds"<<endl;
 
     cout<<setw(20)<<"Current LaserScan Ranges"<<endl;
-    cout<<setw(20)<<"Minumum range [range : "<<minRange(laserScanMessage)<<", angle: "<<radianToDegree(relativeAngleOfMinRage(laserScanMessage))<<", index: "<<indexOfMinRange(laserScanMessage)<<"]"<<endl;
-    cout<<setw(20)<<"Maximum range [range : "<<maxRange(laserScanMessage)<<", angle"<<radianToDegree(relativeAngleOfMaxRange(laserScanMessage))<<", index: "<<indexOfMaxRange(laserScanMessage)<<"]"<<endl;
+    cout<<setw(20)<<"Minumum range [range : "<<minRange(laserScanMessage)<<", angle: "<<radianToDegree(relativeAngleOfMinRage
+    (laserScanMessage))<<", index: "<<indexOfMinRange(laserScanMessage)<<"]"<<endl;
+    cout<<setw(20)<<"Maximum range [range : "<<maxRange(laserScanMessage)<<", angle"<<radianToDegree(relativeAngleOfMaxRange
+    (laserScanMessage))<<", index: "<<indexOfMaxRange(laserScanMessage)<<"]"<<endl;
     cout<<"---"<<endl<<endl;
 }
