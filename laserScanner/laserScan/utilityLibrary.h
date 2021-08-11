@@ -18,6 +18,7 @@ typedef double POSE;
 typedef unsigned char BUFFER;
 // Conversion is made from degree to radian
 double degreeToRadian(double angleInDegree);
+double radianToDegree(double degreeInRadian);
 // Robot pose is defined
 typedef struct {
     POSE x;
