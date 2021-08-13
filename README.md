@@ -12,10 +12,15 @@ To run python program, firstly in the terminal " chmod +x file_name.py " is adde
     
 2. computerVisionwithROS
     - humanDetection.py
+    - humanDetection.cpp (This script is still in development.)
 
 3. laserScanner
     - scanSubscriber.py
     - scanSubscriber.cpp
+
+4. ROSArduino
+    - ultrasonicSensor.ino
+    - servoControl.ino
 
 
 
