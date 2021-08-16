@@ -19,7 +19,7 @@ To run python program, firstly in the terminal " chmod +x file_name.py " is adde
     - scanSubscriber.cpp
 
 4. ROSArduino
-    - ultrasonicSensor.ino
+    - ultrasonicSensor.ino (Parallax Ping was used.)
     - servoControl.ino
 
 
